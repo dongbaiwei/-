@@ -1,0 +1,42 @@
+/* 生医分子背景与东南大学校徽水印 */
+body {
+  isolation: isolate;
+}
+
+.bme-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+  background-color: #f7f6f2;
+  background-image: url("bme-molecular-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.bme-background-emblem {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(260px, 36vw, 540px);
+  max-width: 70vw;
+  height: auto;
+  opacity: .18;
+  filter: invert(56%) sepia(13%) saturate(403%) hue-rotate(54deg)
+    brightness(101%) contrast(85%);
+}
+
+@media (max-width: 900px) {
+  .bme-background {
+    background-position: 72% center;
+  }
+}
+
+@media (max-width: 640px) {
+  .bme-background {
+    background-position: 85% center;
+  }
+}
