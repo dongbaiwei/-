@@ -4,11 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <script>
-    try {
-      if (localStorage.getItem('seucseweb_version') === 'old') { location.replace('./old.html'); }
-    } catch (e) {}
-  </script>
+  <script src="assets/appearance.js"></script>
   <meta name="description" content="东南大学生物科学与医学工程学院常用网址导航，提供便捷的校内网站访问入口"/>
   <meta name="keywords" content="东南大学,SEU,生医,网址导航,教务处,选课系统,图书馆"/>
   <meta name="author" content="小黑菌"/>
@@ -272,9 +268,16 @@ body {
 
 .mast-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 20px;
   margin-top: 12px;
+}
+
+.mast-title-group {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  flex: none;
 }
 
 .mast-title {
@@ -330,8 +333,29 @@ body {
 }
 
 #mastClock {
-  font-family: var(--mono);
-  font-size: 11px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 2ch;
+  white-space: nowrap;
+  margin-left: auto;
+  text-align: right;
+  line-height: 1.4;
+}
+
+@media (max-width: 1000px) {
+  .mast-row { flex-wrap: wrap; gap: 12px; }
+  .mast-title-group { gap: 14px; }
+  #mastClock { font-size: 24px; }
+}
+
+@media (max-width: 640px) {
+  #mastClock { flex-basis: 100%; font-size: 22px; }
 }
 
 /* ============================================================
@@ -440,37 +464,6 @@ body {
 .search-btn:hover {
   background: var(--green);
   color: #fff;
-}
-
-.ver-switch {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink-2);
-  text-decoration: none;
-  border: 1px solid var(--line-soft);
-  border-radius: 7px;
-  padding: 6px 11px;
-  background: var(--paper-hi);
-  transition: color .15s var(--ease), border-color .15s var(--ease);
-}
-
-.ver-switch i {
-  font-size: .72rem;
-  color: var(--ink-3);
-  transition: color .15s var(--ease);
-}
-
-.ver-switch:hover {
-  color: var(--green);
-  border-color: var(--green);
-}
-
-.ver-switch:hover i {
-  color: var(--green);
 }
 
 /* 列表/网格排列切换 */
@@ -1240,6 +1233,10 @@ body {
   user-select: none;
 }
 
+.draggable:active {
+  cursor: grabbing;
+}
+
 .dragging {
   opacity: .45;
   background: var(--paper-hi);
@@ -1448,9 +1445,31 @@ body {
 </style>
   <link rel="stylesheet" href="assets/bme-background.css">
   <link rel="stylesheet" href="assets/custom-sites.css">
+  <link rel="stylesheet" href="assets/appearance.css">
 </head>
 
 <body>
+  <!-- 按主题将生医壁纸的浅色底和深色纹样映射为对应配色 -->
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;pointer-events:none">
+    <defs>
+      <filter id="bme-wallpaper-black" color-interpolation-filters="sRGB">
+        <feColorMatrix type="saturate" values="0"/>
+        <feComponentTransfer>
+          <feFuncR type="linear" slope="-0.8745098" intercept="1"/>
+          <feFuncG type="linear" slope="-0.8745098" intercept="1"/>
+          <feFuncB type="linear" slope="-0.8745098" intercept="1"/>
+        </feComponentTransfer>
+      </filter>
+      <filter id="bme-wallpaper-blue" color-interpolation-filters="sRGB">
+        <feColorMatrix type="saturate" values="0"/>
+        <feComponentTransfer>
+          <feFuncR type="linear" slope="0.9137255" intercept="0"/>
+          <feFuncG type="linear" slope="0.4823530" intercept="0.4705882"/>
+          <feFuncB type="linear" slope="0.1686275" intercept="0.8313725"/>
+        </feComponentTransfer>
+      </filter>
+    </defs>
+  </svg>
   <!-- 固定背景层：生医分子插画与居中的校徽水印 -->
   <div class="bme-background" aria-hidden="true">
     <img class="bme-background-emblem" src="assets/seu-emblem-bw.svg" alt="">
@@ -1462,9 +1481,9 @@ body {
       <span class="minibar-brand"><span class="seal-mini">医</span><span class="brand-text">生医常用网址</span></span>
       <nav class="minibar-links">
         <a onclick="switchCat('academic')">学术</a>
+        <a onclick="switchCat('life')">生活</a>
         <a onclick="switchCat('service')">服务</a>
         <a onclick="switchCat('resource')">资源</a>
-        <a href="./old.html" onclick="try{localStorage.setItem('seucseweb_version','old')}catch(e){}">旧版</a>
       </nav>
     </div>
   </div>
@@ -1474,18 +1493,19 @@ body {
     <div class="mast-inner">
       <p class="mast-kicker">东南大学 · 生物科学与医学工程学院</p>
       <div class="mast-row">
-        <h1 class="mast-title">生医常用网址</h1>
-        <span class="seal" aria-hidden="true">生医</span>
+        <div class="mast-title-group">
+          <h1 class="mast-title">生医常用网址</h1>
+          <span class="seal" aria-hidden="true">生医</span>
+        </div>
+        <time id="mastClock" aria-label="北京时间"><span id="mastClockTime">—</span><span id="mastClockDate">—</span></time>
       </div>
       <div class="mast-scroll">
         <img src="assets/seu-motto-v.svg" alt="东南大学校训：止于至善">
       </div>
       <p class="mast-meta">
-        <span id="siteTotalLabel">共 20 个常用站点</span>
+        <span id="siteTotalLabel">共 23 个常用站点</span>
         <span class="dot"></span>
         <span>持续更新</span>
-        <span class="dot"></span>
-        <span id="mastClock">—</span>
       </p>
     </div>
   </header>
@@ -1510,23 +1530,21 @@ body {
       <button class="layout-toggle" id="layoutToggle" onclick="toggleLayout()" title="切换排列方式">
         <i class="fas fa-table-cells-large"></i>
       </button>
-      <a class="ver-switch" href="./old.html" onclick="try{localStorage.setItem('seucseweb_version','old')}catch(e){}" title="切换至旧版">
-        <i class="fas fa-clock-rotate-left"></i>旧版
-      </a>
     </div>
   </div>
 
   <div class="custom-site-actions">
-    <p class="custom-site-note">自定义网站仅保存在当前浏览器，新旧版共用。</p>
+    <p class="custom-site-note">学院选择、导航内容和外观设置保存在当前浏览器。</p>
     <button class="custom-site-add" id="addSiteButton" type="button">＋ 添加网站</button>
   </div>
 
-  <!-- 顶部分类切换（旧版交互：过滤视图） -->
+  <!-- 顶部分类切换 -->
   <div class="cat-tabs" id="catTabs">
-    <a class="cat-tab active" data-tab="all" onclick="switchCat('all')">全部<span class="n">20</span></a>
-    <a class="cat-tab" data-tab="academic" onclick="switchCat('academic')">学术<span class="n">6</span></a>
+    <a class="cat-tab active" data-tab="all" onclick="switchCat('all')">全部<span class="n">23</span></a>
+    <a class="cat-tab" data-tab="academic" onclick="switchCat('academic')">学术<span class="n">7</span></a>
+    <a class="cat-tab" data-tab="life" onclick="switchCat('life')">生活<span class="n">4</span></a>
     <a class="cat-tab" data-tab="service" onclick="switchCat('service')">服务<span class="n">7</span></a>
-    <a class="cat-tab" data-tab="resource" onclick="switchCat('resource')">资源<span class="n">7</span></a>
+    <a class="cat-tab" data-tab="resource" onclick="switchCat('resource')">资源<span class="n">5</span></a>
     <span class="tab-sep"></span>
     <a class="cat-tab" data-tab="favorite" onclick="switchCat('favorite')">收藏<span class="n">★</span></a>
     <a class="cat-tab" data-tab="recent" onclick="switchCat('recent')">最近<span class="n">↺</span></a>
@@ -1539,7 +1557,7 @@ body {
       <span class="sec-no">01</span>
       <h2 class="sec-title">学术</h2>
       <span class="sec-en">Academic</span>
-      <span class="sec-count">6 sites</span>
+      <span class="sec-count">7 sites</span>
     </header>
     <div class="sec-rows">
     <div class="link-card fade-in-up" data-category="academic">
@@ -1599,27 +1617,102 @@ body {
       <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
         <i class="fas fa-star"></i>
       </button>
-      <a href="http://newxk.urp.seu.edu.cn" target="_blank" rel="noopener" onclick="recordVisit(this)">
+      <a href="https://ehall.seu.edu.cn/gsapp/sys/jzxxtjapp/*default/index.do?t_s=1791951585917&amp;EMAP_LANG=zh&amp;THEME=indigo&amp;amp_sec_version_=1&amp;gid_=VHZ6K1A3Z29YeWtFVEpBU0FwOWF4LzFCQWtuNlo4T2R5b1JkMXowZDd6Mi8zZ3RFSVhtcTR2NTQ4bGh4ZzJzeXJlYTBwdnAxcXVWQk1ZTTZ6R252S1E9PQ#/hdyy" target="_blank" rel="noopener" onclick="recordVisit(this)">
         <span class="tile-head">
           <span class="row-no">05</span>
-          <span class="row-domain">newxk.urp.seu.edu.cn</span>
+          <span class="row-domain">ehall.seu.edu.cn</span>
         </span>
-        <span class="link-title">选课系统</span>
-        <span class="link-desc">课程选择与管理</span>
+        <span class="link-title">素质讲座</span>
+        <span class="link-desc">讲座信息与活动预约</span>
       </a>
     </div>
-
     <div class="link-card fade-in-up" data-category="academic">
       <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
         <i class="fas fa-star"></i>
       </button>
-      <a href="https://yjsxk.urp.seu.edu.cn/yjsxkapp/sys/xsxkapp/index.html" target="_blank" rel="noopener" onclick="recordVisit(this)">
+      <a href="https://www.yuketang.cn/" target="_blank" rel="noopener" onclick="recordVisit(this)">
         <span class="tile-head">
           <span class="row-no">06</span>
-          <span class="row-domain">yjsxk.urp.seu.edu.cn</span>
+          <span class="row-domain">yuketang.cn</span>
         </span>
-        <span class="link-title">研究生选课</span>
-        <span class="link-desc">研究生课程选择与管理</span>
+        <span class="link-title">雨课堂</span>
+        <span class="link-desc">在线教学与课程学习</span>
+      </a>
+    </div>
+    <div class="link-card fade-in-up" data-category="academic">
+      <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
+        <i class="fas fa-star"></i>
+      </button>
+      <a href="https://www.icourse163.org/" target="_blank" rel="noopener" onclick="recordVisit(this)">
+        <span class="tile-head">
+          <span class="row-no">07</span>
+          <span class="row-domain">icourse163.org</span>
+        </span>
+        <span class="link-title">慕课MOOC</span>
+        <span class="link-desc">中国大学在线课程</span>
+      </a>
+    </div>
+    </div>
+  </section>
+
+  <section class="index-section" id="sec-life" data-section="life">
+    <header class="sec-head">
+      <span class="sec-no">02</span>
+      <h2 class="sec-title">生活</h2>
+      <span class="sec-en">Life</span>
+      <span class="sec-count">4 sites</span>
+    </header>
+    <div class="sec-rows">
+    <div class="link-card fade-in-up" data-category="life">
+      <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
+        <i class="fas fa-star"></i>
+      </button>
+      <a href="https://career.seu.edu.cn/" target="_blank" rel="noopener" onclick="recordVisit(this)">
+        <span class="tile-head">
+          <span class="row-no">01</span>
+          <span class="row-domain">career.seu.edu.cn</span>
+        </span>
+        <span class="link-title">东南大学就业指导中心</span>
+        <span class="link-desc">校园招聘信息</span>
+      </a>
+    </div>
+    <div class="link-card fade-in-up" data-category="life">
+      <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
+        <i class="fas fa-star"></i>
+      </button>
+      <a href="https://47.76.77.248/" target="_blank" rel="noopener" onclick="recordVisit(this)">
+        <span class="tile-head">
+          <span class="row-no">02</span>
+          <span class="row-domain">47.76.77.248</span>
+        </span>
+        <span class="link-title">兰台接驳车实时查询</span>
+        <span class="link-desc">校园接驳车实时位置</span>
+      </a>
+    </div>
+    <div class="link-card fade-in-up" data-category="life">
+      <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
+        <i class="fas fa-star"></i>
+      </button>
+      <a href="https://jwc.seu.edu.cn/xl/list.htm" target="_blank" rel="noopener" onclick="recordVisit(this)">
+        <span class="tile-head">
+          <span class="row-no">03</span>
+          <span class="row-domain">jwc.seu.edu.cn</span>
+        </span>
+        <span class="link-title">东南大学校历</span>
+        <span class="link-desc">节假日放假信息</span>
+      </a>
+    </div>
+    <div class="link-card fade-in-up" data-category="life">
+      <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
+        <i class="fas fa-star"></i>
+      </button>
+      <a href="https://chargers.dpdns.org/status" target="_blank" rel="noopener" onclick="recordVisit(this)">
+        <span class="tile-head">
+          <span class="row-no">04</span>
+          <span class="row-domain">chargers.dpdns.org</span>
+        </span>
+        <span class="link-title">东南大学电动车空闲充电桩实时情况</span>
+        <span class="link-desc">校园充电桩空闲情况</span>
       </a>
     </div>
     </div>
@@ -1627,7 +1720,7 @@ body {
 
   <section class="index-section" id="sec-service" data-section="service">
     <header class="sec-head">
-      <span class="sec-no">02</span>
+      <span class="sec-no">03</span>
       <h2 class="sec-title">服务</h2>
       <span class="sec-en">Service</span>
       <span class="sec-count">7 sites</span>
@@ -1637,26 +1730,26 @@ body {
       <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
         <i class="fas fa-star"></i>
       </button>
-      <a href="http://ehall.seu.edu.cn/new/index.html" target="_blank" rel="noopener" onclick="recordVisit(this)">
+      <a href="https://yjs.seu.edu.cn/gsapp/sys/yjsemaphome/portal/index.do" target="_blank" rel="noopener" onclick="recordVisit(this)">
         <span class="tile-head">
           <span class="row-no">01</span>
-          <span class="row-domain">ehall.seu.edu.cn</span>
+          <span class="row-domain">yjs.seu.edu.cn</span>
         </span>
-        <span class="link-title">办事大厅</span>
-        <span class="link-desc">网上办事服务平台</span>
+        <span class="link-title">研究生综合服务平台</span>
+        <span class="link-desc">研究生综合事务办理</span>
       </a>
     </div>
     <div class="link-card fade-in-up" data-category="service">
       <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
         <i class="fas fa-star"></i>
       </button>
-      <a href="http://i.seu.edu.cn/index.html#/" target="_blank" rel="noopener" onclick="recordVisit(this)">
+      <a href="http://ehall.seu.edu.cn/new/index.html" target="_blank" rel="noopener" onclick="recordVisit(this)">
         <span class="tile-head">
           <span class="row-no">02</span>
-          <span class="row-domain">i.seu.edu.cn</span>
+          <span class="row-domain">ehall.seu.edu.cn</span>
         </span>
-        <span class="link-title">信息平台</span>
-        <span class="link-desc">东大综合信息服务</span>
+        <span class="link-title">办事大厅</span>
+        <span class="link-desc">网上办事服务平台</span>
       </a>
     </div>
     <div class="link-card fade-in-up" data-category="service">
@@ -1689,22 +1782,9 @@ body {
       <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
         <i class="fas fa-star"></i>
       </button>
-      <a href="https://labor.seu.edu.cn/" target="_blank" rel="noopener" onclick="recordVisit(this)">
-        <span class="tile-head">
-          <span class="row-no">05</span>
-          <span class="row-domain">labor.seu.edu.cn</span>
-        </span>
-        <span class="link-title">劳动教育</span>
-        <span class="link-desc">劳动教育与实践平台</span>
-      </a>
-    </div>
-    <div class="link-card fade-in-up" data-category="service">
-      <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
-        <i class="fas fa-star"></i>
-      </button>
       <a href="https://jwc.seu.edu.cn/xspt/list.htm" target="_blank" rel="noopener" onclick="recordVisit(this)">
         <span class="tile-head">
-          <span class="row-no">06</span>
+          <span class="row-no">05</span>
           <span class="row-domain">jwc.seu.edu.cn</span>
         </span>
         <span class="link-title">教务处办事平台</span>
@@ -1715,13 +1795,26 @@ body {
       <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
         <i class="fas fa-star"></i>
       </button>
-      <a href="https://auth.seu.edu.cn/dist/#/dist/main/login?service=http%3A%2F%2Fdekt.seu.edu.cn%2Fzhtw%2F%3Ft_s%3D1697987944225" target="_blank" rel="noopener" onclick="recordVisit(this)">
+      <a href="http://newxk.urp.seu.edu.cn" target="_blank" rel="noopener" onclick="recordVisit(this)">
+        <span class="tile-head">
+          <span class="row-no">06</span>
+          <span class="row-domain">newxk.urp.seu.edu.cn</span>
+        </span>
+        <span class="link-title">选课系统</span>
+        <span class="link-desc">课程选择与管理</span>
+      </a>
+    </div>
+    <div class="link-card fade-in-up" data-category="service">
+      <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
+        <i class="fas fa-star"></i>
+      </button>
+      <a href="https://yjsxk.urp.seu.edu.cn/yjsxkapp/sys/xsxkapp/index.html" target="_blank" rel="noopener" onclick="recordVisit(this)">
         <span class="tile-head">
           <span class="row-no">07</span>
-          <span class="row-domain">auth.seu.edu.cn</span>
+          <span class="row-domain">yjsxk.urp.seu.edu.cn</span>
         </span>
-        <span class="link-title">第二课堂</span>
-        <span class="link-desc">课外活动管理平台</span>
+        <span class="link-title">研究生选课</span>
+        <span class="link-desc">研究生课程选择与管理</span>
       </a>
     </div>
     </div>
@@ -1729,10 +1822,10 @@ body {
 
   <section class="index-section" id="sec-resource" data-section="resource">
     <header class="sec-head">
-      <span class="sec-no">03</span>
+      <span class="sec-no">04</span>
       <h2 class="sec-title">资源</h2>
       <span class="sec-en">Resource</span>
-      <span class="sec-count">7 sites</span>
+      <span class="sec-count">5 sites</span>
     </header>
     <div class="sec-rows">
     <div class="link-card fade-in-up" data-category="resource">
@@ -1778,22 +1871,9 @@ body {
       <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
         <i class="fas fa-star"></i>
       </button>
-      <a href="https://cvs.seu.edu.cn/" target="_blank" rel="noopener" onclick="recordVisit(this)">
-        <span class="tile-head">
-          <span class="row-no">04</span>
-          <span class="row-domain">cvs.seu.edu.cn</span>
-        </span>
-        <span class="link-title">云课堂</span>
-        <span class="link-desc">在线学习平台</span>
-      </a>
-    </div>
-    <div class="link-card fade-in-up" data-category="resource">
-      <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
-        <i class="fas fa-star"></i>
-      </button>
       <a href="https://nic.seu.edu.cn/" target="_blank" rel="noopener" onclick="recordVisit(this)">
         <span class="tile-head">
-          <span class="row-no">05</span>
+          <span class="row-no">04</span>
           <span class="row-domain">nic.seu.edu.cn</span>
         </span>
         <span class="link-title">网络中心</span>
@@ -1804,22 +1884,9 @@ body {
       <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
         <i class="fas fa-star"></i>
       </button>
-      <a href="https://tommy.seu.edu.cn/filebrowser/login?redirect=%2Ffiles%2F" target="_blank" rel="noopener" onclick="recordVisit(this)">
-        <span class="tile-head">
-          <span class="row-no">06</span>
-          <span class="row-domain">tommy.seu.edu.cn</span>
-        </span>
-        <span class="link-title">薪火计划</span>
-        <span class="link-desc">学习资源共享平台</span>
-      </a>
-    </div>
-    <div class="link-card fade-in-up" data-category="resource">
-      <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏">
-        <i class="fas fa-star"></i>
-      </button>
       <a href="https://seucseweb.github.io/GPA-Calculator/" target="_blank" rel="noopener" onclick="recordVisit(this)">
         <span class="tile-head">
-          <span class="row-no">07</span>
+          <span class="row-no">05</span>
           <span class="row-domain">seucseweb.github.io</span>
         </span>
         <span class="link-title">绩点计算器</span>
@@ -1827,6 +1894,44 @@ body {
       </a>
     </div>
     </div>
+    <section class="project-links" id="project-links" aria-labelledby="projectLinksTitle">
+      <header class="project-links-heading">
+        <div><h3 id="projectLinksTitle">实用项目与脚本</h3><p>分享好用的 GitHub 项目、脚本和工具链接。欢迎投稿展示。</p></div>
+        <span class="project-links-count" id="projectLinksCount">3 个项目</span>
+      </header>
+      <div class="sec-rows project-rows" id="projectLinksRows">
+        <div class="link-card fade-in-up shared-project-card" data-category="resource" data-shared-project="true">
+          <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏东南大学研究生课程资料"><i class="fas fa-star"></i></button>
+          <a href="https://github.com/oneman233/seu-master?tab=readme-ov-file" target="_blank" rel="noopener noreferrer" onclick="recordVisit(this)">
+            <span class="tile-head"><span class="row-no">01</span><span class="project-tag">课程资料</span></span>
+            <span class="link-title">东南大学研究生课程资料</span>
+            <span class="link-desc">东南大学研究生课程资料整理。</span>
+            <span class="project-repository">oneman233 / seu-master</span>
+            <span class="project-visit">查看 GitHub 项目 ↗</span>
+          </a>
+        </div>
+        <div class="link-card fade-in-up shared-project-card" data-category="resource" data-shared-project="true">
+          <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏东南大学学生手册 Skill"><i class="fas fa-star"></i></button>
+          <a href="https://github.com/Andiii208/seu-handbook-skill" target="_blank" rel="noopener noreferrer" onclick="recordVisit(this)">
+            <span class="tile-head"><span class="row-no">02</span><span class="project-tag">Agent Skill</span></span>
+            <span class="link-title">东南大学学生手册 Skill</span>
+            <span class="link-desc">将《东南大学大学生手册（2025）》变成可装进本地 Agent 的 Skill。</span>
+            <span class="project-repository">Andiii208 / seu-handbook-skill</span>
+            <span class="project-visit">查看 GitHub 项目 ↗</span>
+          </a>
+        </div>
+        <div class="link-card fade-in-up shared-project-card" data-category="resource" data-shared-project="true">
+          <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="收藏鼠鼠实习妙妙工具"><i class="fas fa-star"></i></button>
+          <a href="https://github.com/LiuMengxuan04/shushu-internship-tool" target="_blank" rel="noopener noreferrer" onclick="recordVisit(this)">
+            <span class="tile-head"><span class="row-no">03</span><span class="project-tag">实习求职</span></span>
+            <span class="link-title">鼠鼠实习妙妙工具</span>
+            <span class="link-desc">把岗位描述变项目，把项目变简历，把简历变面试。</span>
+            <span class="project-repository">LiuMengxuan04 / shushu-internship-tool</span>
+            <span class="project-visit">查看 GitHub 项目 ↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
   </section>
 
 
@@ -1837,40 +1942,6 @@ body {
     <button class="floating-btn" onclick="scrollToTop()" title="返回顶部">
       <i class="fas fa-arrow-up"></i>
     </button>
-    <button class="floating-btn" onclick="showModal()" title="作者的话">
-      <i class="fas fa-comment"></i>
-    </button>
-    <button class="floating-btn" onclick="toggleDragMode()" title="拖拽排序" id="dragToggle">
-      <i class="fas fa-arrows-alt"></i>
-    </button>
-  </div>
-
-  <!-- 作者的话 -->
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">原站作者的话</h2>
-        <button class="close-btn" onclick="hideModal()" aria-label="关闭">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>做这么一个网站集锦的初衷是因为感觉找网站很麻烦，于是搞了个 html，后来想干脆做一个在线的网页……</p>
-        <p>（ps：Ctrl+K 可以定位到搜索框）</p>
-        <p class="modal-label">新功能</p>
-        <ul class="modal-list">
-          <li>改进的站内搜索，无需跳转外部引擎</li>
-          <li>最近访问记录与访问次数统计</li>
-          <li>分区目录，拖拽排序（持久化保存）</li>
-        </ul>
-        <p>如果有想加入的网站或发现 BUG，欢迎联系：</p>
-        <div class="modal-actions">
-          <button class="btn-dark" onclick="resetCustomOrder()">重置排序</button>
-          <a class="btn-link" href="mailto:1575373800@qq.com">1575373800@qq.com</a>
-          <a class="btn-link" href="https://www.askbox.ink/box/uu/BTT25B13?uid=6e33972bbf4562ad5f8bb38a7db456f3" target="_blank">在线留言 →</a>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- 大礼堂连续纹样带 -->
@@ -1880,22 +1951,9 @@ body {
   <footer class="footer">
     <div class="footer-inner">
       <img class="footer-emblem" src="assets/seu-emblem.svg" alt="东南大学校标" width="44" height="44">
-      <div id="bottom-outer">
-        本站总访问量 <span id="busuanzi_value_site_pv">32679</span> 次
-        <span class="dot"></span>
-        访客数 <span id="busuanzi_value_site_uv">28690</span> 人
-      </div>
-      <div class="author-info">
-        <a href="https://liumengxuan04.github.io/" target="_blank">原站作者：小黑菌</a>
-        <span class="dot"></span>
-        <span>来自 22 级软件学院</span>
-        <span class="dot"></span>
-        <span id="current-time"></span>
-      </div>
     </div>
   </footer>
 
-  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
   <script>
     // 全局变量
     let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
@@ -1903,13 +1961,14 @@ body {
     let currentCategory = 'all';
     let customOrder = JSON.parse(localStorage.getItem('customOrder') || '[]');
 
-    let isDragMode = false;
     let draggedElement = null;
 
     // 初始化
     document.addEventListener('DOMContentLoaded', function() {
 
+      BmePersonalization.prepare();
       BmeCustomSites.init();
+      BmePersonalization.init();
       initializeFavorites();
       renderVisitBadges();
       let savedLayout = 'grid';
@@ -1939,12 +1998,14 @@ body {
         const desc = card.querySelector('.link-desc').textContent.toLowerCase();
         const category = card.dataset.category.toLowerCase();
         
-        const matches = keyword === '' || 
+        const categoryName = window.BmePersonalization ? BmePersonalization.categoryName(category).toLowerCase() : category;
+        const categoryVisible = !window.BmePersonalization || (card.dataset.sharedProject ? BmePersonalization.isProjectsVisible() : BmePersonalization.isCategoryVisible(category));
+        const matches = keyword === '' || categoryName.includes(keyword) || 
                        title.includes(keyword) || 
                        desc.includes(keyword) || 
                        category.includes(keyword);
         
-        const shouldShow = matches && 
+        const shouldShow = categoryVisible && matches && 
                           (currentCategory === 'all' || 
                            card.dataset.category === currentCategory ||
                            (currentCategory === 'favorite' && card.querySelector('.favorite-btn').classList.contains('active')) ||
@@ -2123,7 +2184,7 @@ body {
       onScroll();
     }
 
-    // 顶部分类切换（旧版交互：过滤视图）
+    // 顶部分类切换
     function switchCat(cat) {
       currentCategory = cat;
       document.querySelectorAll('.cat-tab').forEach(t =>
@@ -2136,20 +2197,27 @@ body {
     // 隐藏不可见分区
     function updateSectionVisibility() {
       document.querySelectorAll('.index-section').forEach(sec => {
-        const catOK = ['all', 'favorite', 'recent'].includes(currentCategory) ||
-                      currentCategory === sec.dataset.section;
+        const categoryVisible = !window.BmePersonalization || BmePersonalization.isCategoryVisible(sec.dataset.section);
+        const catOK = categoryVisible && (['all', 'favorite', 'recent'].includes(currentCategory) ||
+                      currentCategory === sec.dataset.section);
         const any = catOK && Array.prototype.some.call(
           sec.querySelectorAll('.link-card'),
           c => c.style.display !== 'none'
         );
-        sec.style.display = any ? '' : 'none';
+        const emptyCategory = sec.querySelectorAll('.link-card').length === 0 && !document.getElementById('searchInput').value.trim() && ['all', sec.dataset.section].includes(currentCategory);
+        sec.style.display = catOK && (any || emptyCategory) ? '' : 'none';
       });
+      const projects = document.getElementById('project-links');
+      const projectCards = Array.from(document.querySelectorAll('#projectLinksRows .link-card'));
+      const visibleProjects = projectCards.some(card => card.style.display !== 'none');
+      const filtered = !!document.getElementById('searchInput').value.trim() || !['all', 'resource'].includes(currentCategory);
+      projects.hidden = !visibleProjects && (projectCards.length > 0 || filtered);
     }
 
     // 列表/网格排列切换（网格为默认，偏好存 localStorage）
     function applyLayout(mode) {
       const list = mode === 'list';
-      document.querySelectorAll('.sec-rows').forEach(r => r.classList.toggle('list-mode', list));
+      document.querySelectorAll('.sec-rows:not(.project-rows)').forEach(r => r.classList.toggle('list-mode', list));
       const btn = document.getElementById('layoutToggle');
       if (btn) {
         btn.innerHTML = list
@@ -2174,58 +2242,48 @@ body {
       return recentVisits.some(visit => visit.title === title);
     }
 
-    // 拖拽排序功能
-    function toggleDragMode() {
-      isDragMode = !isDragMode;
-      const toggle = document.getElementById('dragToggle');
-      const cards = document.querySelectorAll('.link-card');
-      
-      if (isDragMode) {
-        toggle.classList.add('active');
-        showToast('拖拽模式已开启，可以拖拽重新排序 🔄');
-        cards.forEach(card => {
-          card.classList.add('draggable');
-        });
-      } else {
-        toggle.classList.remove('active');
-        showToast('拖拽模式已关闭');
-        cards.forEach(card => {
-          card.classList.remove('draggable', 'dragging', 'drop-zone');
-        });
-      }
-    }
-
+    // 所有网站卡片默认支持直接拖拽排序
     function setupDragAndDrop() {
       const cards = document.querySelectorAll('.link-card');
       
       cards.forEach(card => {
+        card.draggable = true;
+        card.classList.add('draggable');
         if (card.dataset.dragBound) return;
         card.dataset.dragBound = 'true';
         card.addEventListener('dragstart', handleDragStart);
         card.addEventListener('dragover', handleDragOver);
+        card.addEventListener('dragleave', handleDragLeave);
         card.addEventListener('drop', handleDrop);
         card.addEventListener('dragend', handleDragEnd);
       });
     }
 
     function handleDragStart(e) {
-      if (!isDragMode) return;
       draggedElement = this;
       this.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', this.querySelector('.link-title').textContent);
     }
 
     function handleDragOver(e) {
-      if (!isDragMode || !draggedElement || draggedElement === this) return;
-      if (draggedElement.closest('.index-section') !== this.closest('.index-section')) return;
+      if (!draggedElement || draggedElement === this) return;
+      if (draggedElement.closest('.sec-rows') !== this.closest('.sec-rows')) return;
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
+      document.querySelectorAll('.link-card.drop-zone').forEach(card => {
+        if (card !== this) card.classList.remove('drop-zone');
+      });
       this.classList.add('drop-zone');
     }
 
+    function handleDragLeave(e) {
+      if (!e.relatedTarget || !this.contains(e.relatedTarget)) this.classList.remove('drop-zone');
+    }
+
     function handleDrop(e) {
-      if (!isDragMode || !draggedElement || draggedElement === this) return;
-      if (draggedElement.closest('.index-section') !== this.closest('.index-section')) return;
+      if (!draggedElement || draggedElement === this) return;
+      if (draggedElement.closest('.sec-rows') !== this.closest('.sec-rows')) return;
       e.preventDefault();
       this.classList.remove('drop-zone');
       
@@ -2243,6 +2301,7 @@ body {
       
       // 保存新的排序
       saveCustomOrder();
+      BmeCustomSites.updateCounts();
       showToast('位置已交换并保存 ✨');
     }
 
@@ -2250,9 +2309,7 @@ body {
     function applyCustomOrder() {
       if (customOrder.length === 0) return;
       
-      document.querySelectorAll('.index-section').forEach(sec => {
-        const rows = sec.querySelector('.sec-rows');
-        if (!rows) return;
+      document.querySelectorAll('#links-container .sec-rows').forEach(rows => {
         const cards = Array.from(rows.children).filter(c => c.classList.contains('link-card'));
         cards.sort((a, b) => {
           const ia = customOrder.indexOf(a.querySelector('.link-title').textContent);
@@ -2278,8 +2335,7 @@ body {
     }
 
     function handleDragEnd(e) {
-      if (!isDragMode) return;
-      this.classList.remove('dragging', 'drop-zone');
+      document.querySelectorAll('.link-card').forEach(card => card.classList.remove('dragging', 'drop-zone'));
       draggedElement = null;
     }
 
@@ -2296,17 +2352,6 @@ body {
       });
     }
 
-    // 模态框
-    function showModal() {
-      document.getElementById('modal').classList.add('show');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function hideModal() {
-      document.getElementById('modal').classList.remove('show');
-      document.body.style.overflow = '';
-    }
-
     // 工具函数
     function scrollToTop() {
       window.scrollTo({
@@ -2316,25 +2361,16 @@ body {
     }
 
     function updateTime() {
-      const now = new Date();
-      const timeStr = now.toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      });
+      const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+      }).formatToParts(new Date()).map(part => [part.type, part.value]));
       const clockElement = document.getElementById('mastClock');
       if (clockElement) {
-        clockElement.textContent = now.toLocaleDateString('zh-CN', {
-          year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
-        });
-      }
-      
-      const timeElement = document.getElementById('current-time');
-      if (timeElement) {
-        timeElement.textContent = timeStr;
+        document.getElementById('mastClockTime').textContent = `${parts.hour}：${parts.minute}`;
+        document.getElementById('mastClockDate').textContent = `${parts.year}/${parts.month}/${parts.day}`;
+        clockElement.setAttribute('aria-label', `北京时间 ${parts.hour}点${parts.minute}分，${parts.year}年${parts.month}月${parts.day}日`);
+        clockElement.dateTime = `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:00+08:00`;
       }
     }
 
@@ -2410,37 +2446,9 @@ body {
         document.getElementById('searchInput').focus();
       }
       
-      // ESC 关闭模态框
-      if (e.key === 'Escape') {
-        hideModal();
-      }
       
 
       
-      // Ctrl/Cmd + F 切换拖拽模式
-      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-        e.preventDefault();
-        toggleDragMode();
-      }
-    });
-
-    // 点击外部关闭模态框
-    document.getElementById('modal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        hideModal();
-      }
-    });
-
-    // 监听访问量更新
-    window.addEventListener('load', function() {
-      setTimeout(() => {
-        if (window.busuanzi && window.busuanzi.site_pv) {
-          document.getElementById('busuanzi_value_site_pv').textContent = window.busuanzi.site_pv.toLocaleString();
-        }
-        if (window.busuanzi && window.busuanzi.site_uv) {
-          document.getElementById('busuanzi_value_site_uv').textContent = window.busuanzi.site_uv.toLocaleString();
-        }
-      }, 1000);
     });
 
     // 添加平滑滚动
@@ -2484,15 +2492,40 @@ body {
       <label for="customSiteUrl">网站网址</label>
       <input id="customSiteUrl" name="url" required maxlength="2048" type="text" inputmode="url" placeholder="https://example.com" autocomplete="url">
       <label for="customSiteCategory">分类</label>
-      <select id="customSiteCategory" name="category"><option value="academic">学术</option><option value="service">服务</option><option value="resource">资源</option></select>
+      <select id="customSiteCategory" name="category"><option value="academic">学术</option><option value="life">生活</option><option value="service">服务</option><option value="resource">资源</option></select>
       <label for="customSiteDescription">简介（选填）</label>
       <textarea id="customSiteDescription" name="description" maxlength="140" rows="2" placeholder="一句话说明用途"></textarea>
       <p class="custom-site-error" id="customSiteError" role="alert" aria-live="polite"></p>
       <div class="custom-site-form-footer"><button class="custom-site-cancel" id="cancelAddSite" type="button">取消</button><button class="custom-site-submit" type="submit">加入导航</button></div>
     </form>
   </dialog>
+  <div id="appearanceButtonMount" hidden><button class="appearance-open" id="appearanceButton" type="button">主题与壁纸</button></div>
+  <dialog class="appearance-dialog" id="appearanceDialog" aria-labelledby="appearanceHeading">
+    <div class="appearance-heading"><h2 id="appearanceHeading">主题与壁纸</h2><button type="button" id="closeAppearance" aria-label="关闭外观设置">×</button></div>
+    <div class="appearance-controls" id="appearanceControls">
+      <p class="appearance-note">选择后立即生效，刷新后仍会保留。</p>
+      <fieldset><legend>主题</legend><div class="appearance-options theme-options">
+        <button type="button" data-theme-choice="white" aria-pressed="true"><span class="theme-swatch theme-white"></span>白色</button>
+        <button type="button" data-theme-choice="black" aria-pressed="false"><span class="theme-swatch theme-black"></span>黑色</button>
+        <button type="button" data-theme-choice="blue" aria-pressed="false"><span class="theme-swatch theme-blue"></span>蓝色</button>
+      </div></fieldset>
+      <fieldset><legend>壁纸</legend><div class="appearance-options wallpaper-options">
+        <button type="button" data-wallpaper-choice="molecular" aria-pressed="true"><span class="wallpaper-swatch wallpaper-molecular"></span>学院背景</button>
+        <button type="button" data-wallpaper-choice="emblem" aria-pressed="false"><span class="wallpaper-swatch wallpaper-emblem"></span>单校徽</button>
+        <button type="button" data-wallpaper-choice="plain" aria-pressed="false"><span class="wallpaper-swatch wallpaper-plain"></span>纯色</button>
+        <button type="button" data-wallpaper-choice="upload" aria-pressed="false" id="uploadedWallpaper" hidden><span class="wallpaper-swatch" id="uploadedWallpaperPreview"></span>我的图片</button>
+      </div></fieldset>
+      <div class="wallpaper-upload-actions"><label class="wallpaper-upload" for="wallpaperFile">上传图片<input type="file" id="wallpaperFile" accept="image/png,image/jpeg,image/webp"></label><button type="button" id="removeWallpaper" hidden>删除上传图片</button></div>
+      <p class="appearance-note">支持 JPG、PNG、WebP，最大 20 MB；图片自动适配屏幕，仅保存在此浏览器。</p>
+      <p class="appearance-status" id="appearanceStatus" role="status" aria-live="polite"></p>
+    </div>
+    <button class="appearance-done" id="doneAppearance" type="button">完成</button>
+  </dialog>
   <script src="assets/site-model.js"></script>
   <script src="assets/custom-sites.js"></script>
+  <script src="assets/college-profiles.js"></script>
+  <script src="assets/personalization.js"></script>
+  <link rel="stylesheet" href="assets/personalization.css">
 </body>
 
 </html>

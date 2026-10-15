@@ -1,0 +1,133 @@
+:root, :root[data-theme="white"] {
+  color-scheme: light;
+  --paper: #f3f3f3; --paper-hi: #fff;
+  --ink: #1a1a1a; --ink-2: #454545; --ink-3: #626262;
+  --hairline: #dedede; --line-soft: #d1d1d1; --rule: #3c3c3c;
+  --green: #0067c0; --green-dark: #005a9e; --green-soft: rgba(0,103,192,.10);
+  --card-surface: rgba(255,255,255,.22); --card-hover: rgba(255,255,255,.36);
+  --chrome-surface: rgba(255,255,255,.86);
+  --wallpaper-veil: rgba(243,243,243,.18); --emblem-filter: none;
+  --wallpaper-decoration: var(--green);
+  --amber: #a85b00;
+}
+:root[data-theme="black"] {
+  color-scheme: dark;
+  --paper: #202020; --paper-hi: #2b2b2b;
+  --ink: #f5f5f5; --ink-2: #dedede; --ink-3: #b5b5b5;
+  --hairline: #484848; --line-soft: #555; --rule: #979797;
+  --green: #60cdff; --green-dark: #98dfff; --green-soft: rgba(96,205,255,.13);
+  --card-surface: rgba(32,32,32,.26); --card-hover: rgba(48,48,48,.42);
+  --chrome-surface: rgba(32,32,32,.88);
+  --wallpaper-veil: rgba(16,16,16,.75); --emblem-filter: invert(1);
+  --wallpaper-decoration: #ffffff;
+  --amber: #ffce70; --vermillion: #ff998e;
+}
+:root[data-theme="blue"] {
+  color-scheme: light;
+  --paper: #e9f3ff; --paper-hi: #f8fbff;
+  --ink: #082b50; --ink-2: #244c71; --ink-3: #476988;
+  --hairline: #bfd6ec; --line-soft: #a9c8e5; --rule: #245987;
+  --green: #0078d4; --green-dark: #005a9e; --green-soft: rgba(0,120,212,.11);
+  --card-surface: rgba(242,248,255,.24); --card-hover: rgba(242,248,255,.38);
+  --chrome-surface: rgba(242,248,255,.88);
+  --wallpaper-veil: rgba(218,237,255,.40); --emblem-filter: none;
+  --amber: #9d5200;
+}
+:root {
+  --primary-color: var(--ink); --primary-dark: var(--ink-2);
+  --secondary-color: var(--green); --text-secondary: var(--ink-3);
+  --accent-color: var(--amber);
+}
+body { background-color: var(--paper); }
+.bme-background { background-color: var(--paper); }
+.bme-background::after { content: ''; position: absolute; inset: 0; background: var(--wallpaper-veil); }
+/* 生医图片中的校徽与 DNA 使用同一套双色映射，保留水印明暗细节。 */
+:root[data-theme="black"][data-wallpaper="molecular"] .bme-background { filter: url('#bme-wallpaper-black'); }
+:root[data-theme="blue"][data-wallpaper="molecular"] .bme-background { filter: url('#bme-wallpaper-blue'); }
+:root[data-theme="black"][data-wallpaper="molecular"] .bme-background::after,
+:root[data-theme="blue"][data-wallpaper="molecular"] .bme-background::after { display: none; }
+:root[data-theme="black"] .wallpaper-molecular { filter: url('#bme-wallpaper-black'); }
+:root[data-theme="blue"] .wallpaper-molecular { filter: url('#bme-wallpaper-blue'); }
+/* SVG 纹样使用透明轮廓作蒙版，以壁纸装饰色绘制。 */
+:root[data-theme="black"][data-wallpaper="molecular"] .footer-band,
+:root[data-theme="blue"][data-wallpaper="molecular"] .footer-band {
+  background-image: none;
+  background-color: var(--wallpaper-decoration);
+  -webkit-mask: url('seu-dlt-band.svg') center bottom / auto 46px repeat-x;
+  mask: url('seu-dlt-band.svg') center bottom / auto 46px repeat-x;
+}
+:root[data-theme="black"][data-wallpaper="molecular"] .footer,
+:root[data-theme="blue"][data-wallpaper="molecular"] .footer { border-top-color: var(--wallpaper-decoration); }
+:root[data-wallpaper="plain"] .bme-background,
+:root[data-wallpaper="emblem"] .bme-background { background-image: none; }
+:root[data-wallpaper="upload"] .bme-background { background-image: var(--user-wallpaper); background-position: center; }
+:root[data-wallpaper="emblem"] .bme-background-emblem { display: block; z-index: 1; filter: var(--emblem-filter); opacity: .16; width: min(76vw, 760px); max-width: 85vw; }
+:root[data-wallpaper="plain"] .bme-background::after,
+:root[data-wallpaper="emblem"] .bme-background::after { display: none; }
+.link-card { background: var(--card-surface); border-color: var(--line-soft); }
+.link-card, .sec-rows.list-mode .link-card {
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 3px 12px rgba(0,0,0,.04);
+}
+.link-card:hover { background: var(--card-hover); }
+.sec-rows.list-mode .link-card { background: var(--card-surface); }
+.sec-rows.list-mode .link-card:hover { background: var(--card-hover); }
+.minibar { background-color: var(--chrome-surface); }
+.toolbar, .cat-tabs { background: transparent; }
+.custom-site-note, .appearance-note { color: var(--ink-3); }
+.custom-site-add, .custom-site-submit { background: var(--green); border-color: var(--green); color: var(--paper-hi); }
+.custom-site-add:hover, .custom-site-submit:hover { background: var(--green-dark); }
+.custom-site-manage, .custom-site-restore, .appearance-open { background: var(--paper-hi); border: 1px solid var(--line-soft); color: var(--ink); }
+.custom-site-manage:hover, .custom-site-restore:hover { background: var(--card-hover); border-color: var(--green); color: var(--green); }
+.custom-site-manage[aria-pressed="true"] { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+.custom-site-dialog, .appearance-dialog { background: var(--paper-hi); color: var(--ink); border-color: var(--line-soft); }
+.custom-site-form input, .custom-site-form textarea, .custom-site-form select { background: var(--paper); color: var(--ink); border-color: var(--line-soft); }
+.custom-site-form input:focus, .custom-site-form textarea:focus, .custom-site-form select:focus { outline-color: var(--green); }
+.custom-site-cancel { border-color: var(--line-soft); color: var(--ink); }
+.custom-site-remove, .site-manage-remove { background: var(--paper-hi); color: var(--ink-2); }
+.custom-site-error { color: var(--vermillion); }
+.appearance-open { padding: 9px 14px; border-radius: 7px; font: inherit; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.appearance-dialog { margin: auto; width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; padding: 26px; border: 1px solid var(--line-soft); border-radius: 14px; box-shadow: 0 20px 80px #0004; }
+.appearance-dialog::backdrop { background: #0006; backdrop-filter: blur(5px); }
+.appearance-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.appearance-heading h2 { font-size: 22px; }
+.appearance-heading button { font-size: 26px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; padding: 0 6px; }
+.appearance-note { font-size: 12px; margin-top: 8px; }
+.appearance-controls fieldset { border: 0; padding: 0; margin: 22px 0; }
+.appearance-controls legend { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+.appearance-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.appearance-options button { padding: 8px; background: var(--paper); border: 2px solid transparent; border-radius: 9px; font: inherit; color: var(--ink); cursor: pointer; text-align: center; }
+.appearance-options button[aria-pressed="true"] { border-color: var(--green); background: var(--green-soft); }
+.theme-swatch, .wallpaper-swatch { display: block; height: 58px; border: 1px solid #8884; border-radius: 5px; margin-bottom: 7px; }
+.theme-white { background: linear-gradient(135deg, #fff 65%, #0067c0 65%); }
+.theme-black { background: linear-gradient(135deg, #202020 65%, #60cdff 65%); }
+.theme-blue { background: linear-gradient(135deg, #e9f3ff 65%, #0078d4 65%); }
+.wallpaper-swatch { background-size: cover; background-position: center; }
+.wallpaper-molecular { background-image: url('bme-molecular-bg.png'); }
+.wallpaper-emblem { background: #f3f3f3 url('seu-emblem-bw.svg') center / auto 90% no-repeat; }
+.wallpaper-plain { background: var(--paper); }
+.wallpaper-upload-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.wallpaper-upload, .wallpaper-upload-actions button { position: relative; padding: 9px 14px; border: 1px solid var(--line-soft); border-radius: 7px; background: var(--paper); color: var(--ink); font: inherit; cursor: pointer; }
+.wallpaper-upload input { position: absolute; opacity: 0; inset: 0; width: 100%; cursor: pointer; }
+.wallpaper-upload:focus-within { outline: 2px solid var(--green); outline-offset: 2px; }
+.appearance-status { color: var(--ink-2); font-size: 13px; margin-top: 12px; min-height: 20px; }
+.appearance-done { display: block; margin: 16px 0 0 auto; padding: 9px 24px; border: 0; border-radius: 7px; background: var(--green); color: var(--paper-hi); font: inherit; cursor: pointer; }
+.appearance-controls [hidden], .appearance-dialog [hidden] { display: none; }
+.project-links { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line-soft); }
+.project-links-heading { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+.project-links-heading h3 { font-family: var(--serif); font-size: 20px; color: var(--ink); }
+.project-links-heading p { font-size: 12px; color: var(--ink-3); }
+.project-links-heading p { margin-top: 4px; }
+.project-links-count { margin-left: auto; color: var(--ink-3); font: 11px var(--mono); }
+.project-rows { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; }
+.project-rows .link-title, .project-rows .link-desc { white-space: normal; overflow-wrap: anywhere; }
+.shared-project-card a { gap: 7px; min-height: 200px; height: 100%; padding: 16px; }
+.shared-project-card .tile-head { align-items: center; padding-right: 23px; }
+.project-tag { padding: 2px 7px; border-radius: 4px; background: var(--green-soft); color: var(--green); font-size: 10px; }
+.project-repository { color: var(--ink-3); font-family: var(--mono); font-size: 10.5px; overflow-wrap: anywhere; }
+.project-visit { margin-top: auto; padding-top: 8px; font-size: 12px; font-weight: 600; color: var(--green); }
+.project-links[hidden] { display: none; }
+@media (max-width: 900px) { .project-rows { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .project-rows { grid-template-columns: 1fr; } .project-links-heading { gap: 10px; } .project-links-heading > div { flex-basis: 100%; } .project-links-count { margin-left: 0; margin-right: auto; } }
+@media (max-width: 640px) { .custom-site-actions { flex-wrap: wrap; } .custom-site-buttons { justify-content: flex-start; } .appearance-dialog { padding: 20px; } }

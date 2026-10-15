@@ -1,12 +1,13 @@
 (function (root) {
   'use strict';
-  const categories = ['academic', 'service', 'resource'];
+  let categories = ['academic', 'life', 'service', 'resource'];
   function normalize(input) {
     const name = String(input.name || '').trim();
     const description = String(input.description || '').trim();
     if (!name || name.length > 64) throw new Error('请填写网站名称，最多 64 个字。');
     if (description.length > 140) throw new Error('简介最多 140 个字。');
-    if (!categories.includes(input.category)) throw new Error('请选择网站分类。');
+    const category = root.BmePersonalization ? root.BmePersonalization.resolveCategory('custom:' + input.id, input.category) : input.category;
+    if (!categories.includes(category)) throw new Error('请选择网站分类。');
     let value = String(input.url || '').trim();
     if (!value || value.length > 2048) throw new Error('请填写有效的网站网址。');
     if (!/^[a-z][a-z\d+.-]*:/i.test(value)) value = 'https://' + value;
@@ -15,7 +16,7 @@
     if (!['https:', 'http:'].includes(url.protocol) || !url.hostname || url.username || url.password) {
       throw new Error('请使用 http 或 https 网站网址。');
     }
-    return {id: String(input.id || ''), name, description: description || '自定义网站', url: url.href, category: input.category};
+    return {id: String(input.id || ''), name, description: description || '自定义网站', url: url.href, category};
   }
   function validate(input, existing) {
     const site = normalize(input);
@@ -39,7 +40,7 @@
     }
     return sites;
   }
-  const api = {normalize, validate, load};
+  const api = {normalize, validate, load, setCategories: values => { categories = Array.from(new Set(values)); }};
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.BmeSiteModel = api;
 })(typeof window === 'undefined' ? globalThis : window);
