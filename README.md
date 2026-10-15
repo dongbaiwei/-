@@ -6,7 +6,7 @@
 
 支持学院切换、网站增删与拖拽、分类管理、主题壁纸和页面外观定制；所有个人设置都保存在浏览器中，打开即可使用。
 
-### [立即在线体验 →](https://dongbaiwei.github.io/seu-BME-Web-Navigator/)
+### [立即在线体验 →](https://dongbaiwei.github.io/Seu-Web-Navigator/)
 
 </div>
 
