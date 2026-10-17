@@ -4,7 +4,7 @@
     ['01','建筑学院','建筑','arch','jianzhu jz 建院'],
     ['02','机械工程学院','机械','me','jixie jx 机械工程'],
     ['03','能源与环境学院','能环','power','nengyuanhuanjing nyhj nh 能源 环境'],
-    ['04','信息科学与工程学院','信息','radio','xinxi xx 信息工程 通信'],
+    ['04','信息科学与工程学院','信科','radio','xinke xk xinxi xx 信息 信息学院 信息工程 通信'],
     ['05','土木工程学院','土木','civil','tumu tm'],
     ['06','电子科学与工程学院','电子','electronic','dianzi dz'],
     ['07','数学学院','数学','math','shuxue sx'],
@@ -34,14 +34,18 @@
     ['31','人工智能学院','人工智能','ai','rengongzhineng rgzn 智能'],
     ['32','东南大学雷恩研究生学院','雷恩','srjgs','leien le rennes 雷恩研究生院'],
     ['33','东南大学—蒙纳士大学国际学院（苏州）','东蒙','smjgs','dongmeng dm monash mengnashi mns 苏州联合研究生院 蒙纳士'],
-    ['34','生命科学与技术学院','生命','ils','shengming sm 生命科学 生科'],
+    ['34','生命科学与技术学院','生科','ils','shengke sk shengming sm 生命 生命学院 生命科学'],
     ['35','国家卓越工程师学院','卓工','gjzygcs','guojiazhuoyuegongchengshi gjzygcs zg 卓越工程师'],
     ['36','未来技术学院','未来','futuretech','weilaijishu wljs wl 未来技术'],
     ['37','新生学院','新生','xsxy','xinsheng xs'],
     ['38','统计与数据科学学院','统计','stat','tongjiyushujukexue tjysjkx tj 统计 数据科学']
   ];
   const fullPinyin=['jianzhuxueyuan','jixiegongchengxueyuan','nengyuanyuhuanjingxueyuan','xinxikexueyugongchengxueyuan','tumugongchengxueyuan','dianzikexueyugongchengxueyuan','shuxuexueyuan','zidonghuaxueyuan','jisuanjikexueyugongchengxueyuan','wulixueyuan','shengwukexueyuyixuegongchengxueyuan','cailiaokexueyugongchengxueyuan','renwenxueyuan','jingjiguanlixueyuan','dianqigongchengxueyuan','waiguoyuxueyuan','tiyuxi','huaxuehuagongxueyuan','jiaotongxueyuan','yiqikexueyugongchengxueyuan','yishuxueyuan','faxueyuan','yixueyuan','gonggongweishengxueyuan','wujianxiongxueyuan','haiwaijiaoyuxueyuan','ruanjianxueyuan','jichengdianluxueyuan','makesizhuyixueyuan','wangluokongjiananquanxueyuan','rengongzhinengxueyuan','dongnandaxueleienyanjiushengxueyuan','dongnandaxuemengnashidaxueguojixueyuansuzhou','shengmingkexueyujishuxueyuan','guojiazhuoyuegongchengshixueyuan','weilaijishuxueyuan','xinshengxueyuan','tongjiyushujukexuexueyuan'];
-  const profiles = data.map(([id,name,short,host,aliases],index) => Object.freeze({id,name,short,url:'https://'+host+'.seu.edu.cn/',title:short+'常用网址',linkName:id==='17'?'体育系':short+'学院',aliases:[...aliases.split(' '),fullPinyin[index]]}));
+  const profiles = data.map(([id,name,short,host,aliases],index) => {
+    const useFullName = [3,4].includes(Array.from(name).length);
+    const label = useFullName ? name : short;
+    return Object.freeze({id,name,short:label,url:'https://'+host+'.seu.edu.cn/',title:label+'常用网址',linkName:useFullName?name:short+'学院',aliases:[short,...aliases.split(' '),fullPinyin[index]]});
+  });
   const normalize = text => String(text || '').trim().toLowerCase().replace(/[\s·—（）()_-]/g,'');
   function search(query) {
     const needle=normalize(query);

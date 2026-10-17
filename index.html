@@ -183,16 +183,17 @@ body {
 
 .minibar-brand .seal-mini {
   display: inline-flex;
-  width: 16px;
-  height: 16px;
-  border-radius: 3px;
-  background: var(--vermillion);
-  color: #fff;
+  width: 22px;
+  height: 22px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: var(--green-soft);
+  color: var(--green);
   font-size: 9px;
   align-items: center;
   justify-content: center;
   margin-right: 8px;
-  transform: rotate(-4deg);
+  flex: none;
 }
 
 .minibar-links {
@@ -286,29 +287,6 @@ body {
   font-size: clamp(38px, 5.6vw, 62px);
   line-height: 1.08;
   letter-spacing: .015em;
-}
-
-/* 印章 */
-.seal {
-  flex: none;
-  width: 46px;
-  height: 46px;
-  margin-bottom: 8px;
-  border-radius: 4px;
-  background: var(--vermillion);
-  color: #fff;
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: 15px;
-  line-height: 1.15;
-  letter-spacing: 2px;
-  writing-mode: vertical-rl;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(-4deg);
-  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .35), 0 1px 2px rgba(28, 26, 23, .18);
-  user-select: none;
 }
 
 .mast-meta {
@@ -1315,13 +1293,6 @@ body {
     gap: 14px;
   }
 
-  .seal {
-    width: 36px;
-    height: 36px;
-    font-size: 12px;
-    margin-bottom: 4px;
-  }
-
   .toolbar-inner {
     padding: 11px 16px;
   }
@@ -1475,19 +1446,6 @@ body {
     <img class="bme-background-emblem" src="assets/seu-emblem-bw.svg" alt="">
   </div>
 
-  <!-- 置顶迷你导航（滚动后出现） -->
-  <div class="minibar" id="minibar">
-    <div class="minibar-inner">
-      <span class="minibar-brand"><span class="seal-mini">医</span><span class="brand-text">生医常用网址</span></span>
-      <nav class="minibar-links">
-        <a onclick="switchCat('academic')">学术</a>
-        <a onclick="switchCat('life')">生活</a>
-        <a onclick="switchCat('service')">服务</a>
-        <a onclick="switchCat('resource')">资源</a>
-      </nav>
-    </div>
-  </div>
-
   <!-- 报头 -->
   <header class="masthead">
     <div class="mast-inner">
@@ -1495,7 +1453,6 @@ body {
       <div class="mast-row">
         <div class="mast-title-group">
           <h1 class="mast-title">生医常用网址</h1>
-          <span class="seal" aria-hidden="true">生医</span>
         </div>
         <time id="mastClock" aria-label="北京时间"><span id="mastClockTime">—</span><span id="mastClockDate">—</span></time>
       </div>
@@ -1510,44 +1467,44 @@ body {
     </div>
   </header>
 
-  <!-- 搜索工具行 -->
+  <!-- 紧凑操作区：搜索、设置与分类 -->
+  <div class="navigation-workspace">
+    <aside class="welcome-hint" id="welcomeHint" aria-labelledby="welcomeHintHeading" hidden>
+      <div><strong id="welcomeHintHeading">把这里变成你的东大导航</strong><p>选择学院，收藏常用网站；分类、主题和背景都可以在个人设置中调整。</p></div>
+      <div class="welcome-hint-actions"><button type="button" id="welcomeChooseCollege">选择学院</button><button type="button" id="welcomeCustomize">个人设置</button><button type="button" id="welcomeDismiss" aria-label="关闭使用提示，下次不再显示">知道了</button></div>
+    </aside>
   <div class="toolbar">
     <div class="toolbar-inner">
       <div class="search-container">
         <i class="fas fa-search"></i>
-        <input type="text" class="search-input" id="searchInput" placeholder="搜索站点名称、描述或分类…" autocomplete="off">
-        <span class="kbd-chip">Ctrl K</span>
-        <button class="clear-btn" onclick="clearSearch()" title="清空搜索" aria-label="清空搜索">
-          <i class="fas fa-times"></i>
-        </button>
-        <button class="search-btn" id="searchBtn" title="站内搜索" aria-label="搜索">
-          <i class="fas fa-arrow-right"></i>
-        </button>
+        <input type="text" class="search-input" id="searchInput" aria-label="搜索网站" placeholder="搜索网站名称、描述或分类" autocomplete="off">
       </div>
-      <p class="search-stats" id="searchStats" style="display: none;">
-        找到 <span id="searchCount">0</span> 个相关站点
-      </p>
-      <button class="layout-toggle" id="layoutToggle" onclick="toggleLayout()" title="切换排列方式">
-        <i class="fas fa-table-cells-large"></i>
-      </button>
+      <div class="custom-site-actions">
+        <button class="custom-site-add" id="addSiteButton" type="button">＋ 添加网站</button>
+      </div>
     </div>
   </div>
 
-  <div class="custom-site-actions">
-    <p class="custom-site-note">学院选择、导航内容和外观设置保存在当前浏览器。</p>
-    <button class="custom-site-add" id="addSiteButton" type="button">＋ 添加网站</button>
-  </div>
-
   <!-- 顶部分类切换 -->
-  <div class="cat-tabs" id="catTabs">
-    <a class="cat-tab active" data-tab="all" onclick="switchCat('all')">全部<span class="n">23</span></a>
+  </div>
+  <div id="navigationAnchor" aria-hidden="true"></div>
+  <div class="navigation-sticky" id="navigationSticky">
+  <div class="navigation-bottom">
+  <div class="cat-tabs" id="catTabs" role="group" aria-label="网站分类">
+    <button type="button" class="cat-tab active" data-tab="all" onclick="switchCat('all')">全部网站<span class="n">23</span></button>
     <a class="cat-tab" data-tab="academic" onclick="switchCat('academic')">学术<span class="n">7</span></a>
     <a class="cat-tab" data-tab="life" onclick="switchCat('life')">生活<span class="n">4</span></a>
     <a class="cat-tab" data-tab="service" onclick="switchCat('service')">服务<span class="n">7</span></a>
     <a class="cat-tab" data-tab="resource" onclick="switchCat('resource')">资源<span class="n">5</span></a>
     <span class="tab-sep"></span>
-    <a class="cat-tab" data-tab="favorite" onclick="switchCat('favorite')">收藏<span class="n">★</span></a>
-    <a class="cat-tab" data-tab="recent" onclick="switchCat('recent')">最近<span class="n">↺</span></a>
+  </div>
+  <div class="navigation-personal">
+  <div class="view-switch" role="group" aria-label="网站显示方式">
+    <button type="button" data-view-choice="cards" aria-label="卡片视图" aria-pressed="true" title="卡片视图"><span>卡片</span></button>
+    <button type="button" data-view-choice="tiles" aria-label="磁贴视图" aria-pressed="false" title="磁贴视图"><span>磁贴</span></button>
+  </div>
+  </div>
+  </div>
   </div>
 
   <!-- 链接网格 -->
@@ -1948,11 +1905,7 @@ body {
   <div class="footer-band" aria-hidden="true"></div>
 
   <!-- 底部信息 -->
-  <footer class="footer">
-    <div class="footer-inner">
-      <img class="footer-emblem" src="assets/seu-emblem.svg" alt="东南大学校标" width="44" height="44">
-    </div>
-  </footer>
+  <footer class="footer"><div class="site-support"><button type="button" id="openWelcomeHint">使用提示</button><span aria-hidden="true">·</span><button type="button" id="openSiteFeedback">反馈问题 / 推荐网站</button></div></footer>
 
   <script>
     // 全局变量
@@ -1976,19 +1929,19 @@ body {
       applyLayout(savedLayout);
       applyCustomOrder();
       BmeCustomSites.updateCounts();
-      setupMinibar();
+      if (window.BmeNavigationDesign) BmeNavigationDesign.setupSticky();
       updateTime();
       setInterval(updateTime, 1000);
       addScrollAnimation();
       setupDragAndDrop();
       setupCardClick();
-      updateSearchStats();
     });
 
 
 
     // 搜索功能 - 站内搜索
     function performSearch() {
+      if (window.BmeNavigationDesign) BmeNavigationDesign.refresh();
       const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
       const cards = document.querySelectorAll('.link-card');
       let visibleCount = 0;
@@ -2030,8 +1983,6 @@ body {
         }
       });
       
-      updateSearchStats(visibleCount);
-      
       if (keyword && visibleCount === 0) {
         showNoResults();
       } else {
@@ -2062,19 +2013,13 @@ body {
       });
     }
 
-    function updateSearchStats(count = null) {
-      const statsElement = document.getElementById('searchStats');
-      const countElement = document.getElementById('searchCount');
-      
-      if (count !== null) {
-        countElement.textContent = count;
-        statsElement.style.display = count > 0 ? 'block' : 'none';
-      }
-    }
-
     // 搜索事件监听
     document.getElementById('searchInput').addEventListener('input', debounce(performSearch, 300));
-    document.getElementById('searchBtn').addEventListener('click', performSearch);
+    document.getElementById('searchInput').addEventListener('keydown', function(event) {
+      if (event.isComposing) return;
+      if (event.key === 'Enter') { event.preventDefault(); performSearch(); }
+      if (event.key === 'Escape') { event.preventDefault(); clearSearch(); }
+    });
 
     function clearSearch() {
       document.getElementById('searchInput').value = '';
@@ -2108,10 +2053,7 @@ body {
       
       localStorage.setItem('favorites', JSON.stringify(favorites));
       
-      // 如果当前在收藏分类，更新显示
-      if (currentCategory === 'favorite') {
-        performSearch();
-      }
+      performSearch();
     }
 
     function initializeFavorites() {
@@ -2119,10 +2061,9 @@ body {
       cards.forEach(card => {
         const title = card.querySelector('.link-title').textContent;
         const btn = card.querySelector('.favorite-btn');
-        if (favorites.includes(title)) {
-          btn.classList.add('active');
-        }
+        btn.classList.toggle('active', favorites.includes(title));
       });
+      if (window.BmePinnedFavorites) BmePinnedFavorites.render();
     }
 
     // 访问统计
@@ -2175,15 +2116,6 @@ body {
       });
     }
 
-    // 迷你导航：滚过报头后出现
-    function setupMinibar() {
-      const bar = document.getElementById('minibar');
-      if (!bar) return;
-      const onScroll = () => bar.classList.toggle('show', window.scrollY > 240);
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
-    }
-
     // 顶部分类切换
     function switchCat(cat) {
       currentCategory = cat;
@@ -2192,6 +2124,9 @@ body {
       );
       document.getElementById('searchInput').value = '';
       performSearch();
+      if (document.getElementById('navigationSticky')?.classList.contains('is-stuck')) {
+        document.getElementById('links-container').scrollIntoView({block:'start',behavior:'instant'});
+      }
     }
 
     // 隐藏不可见分区
@@ -2212,29 +2147,13 @@ body {
       const visibleProjects = projectCards.some(card => card.style.display !== 'none');
       const filtered = !!document.getElementById('searchInput').value.trim() || !['all', 'resource'].includes(currentCategory);
       projects.hidden = !visibleProjects && (projectCards.length > 0 || filtered);
+      if (window.BmePinnedFavorites) BmePinnedFavorites.render();
     }
 
     // 列表/网格排列切换（网格为默认，偏好存 localStorage）
     function applyLayout(mode) {
       const list = mode === 'list';
       document.querySelectorAll('.sec-rows:not(.project-rows)').forEach(r => r.classList.toggle('list-mode', list));
-      const btn = document.getElementById('layoutToggle');
-      if (btn) {
-        btn.innerHTML = list
-          ? '<i class="fas fa-table-cells-large"></i>'
-          : '<i class="fas fa-list"></i>';
-        btn.title = list ? '切换为网格排列' : '切换为列表排列';
-      }
-    }
-
-    function toggleLayout() {
-      let next = 'grid';
-      try {
-        next = (localStorage.getItem('seucseweb_layout') || 'grid') === 'grid' ? 'list' : 'grid';
-        localStorage.setItem('seucseweb_layout', next);
-      } catch (e) {}
-      applyLayout(next);
-      showToast(next === 'list' ? '已切换为列表排列' : '已切换为网格排列');
     }
 
     function isRecent(card) {
@@ -2345,7 +2264,7 @@ body {
         if (card.dataset.clickBound) return;
         card.dataset.clickBound = 'true';
         card.addEventListener('click', function(e) {
-          if (e.target.closest('button, a')) return;
+          if (e.target.closest('button, a, details')) return;
           const link = card.querySelector('a');
           if (link) link.click();
         });
@@ -2525,7 +2444,12 @@ body {
   <script src="assets/custom-sites.js"></script>
   <script src="assets/college-profiles.js"></script>
   <script src="assets/personalization.js"></script>
+  <script src="assets/pinned-favorites.js"></script>
+  <script src="assets/navigation-design.js"></script>
+  <script src="assets/user-help.js"></script>
   <link rel="stylesheet" href="assets/personalization.css">
+  <link rel="stylesheet" href="assets/navigation-design.css">
+  <link rel="stylesheet" href="assets/user-help.css">
 </body>
 
 </html>

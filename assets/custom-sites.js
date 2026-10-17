@@ -46,7 +46,7 @@
       if (tabCount) tabCount.textContent = count;
       const section = document.getElementById('sec-' + category);
       if (section) {
-        section.querySelector('.sec-count').textContent = count + ' sites';
+        section.querySelector('.sec-count').textContent = count + ' 个网站';
         section.querySelectorAll('.sec-rows').forEach(rows => {
           rows.querySelectorAll('.row-no').forEach((node, index) => { node.textContent = String(index + 1).padStart(2, '0'); });
         });

@@ -30,7 +30,20 @@ button.cat-tab.active{color:var(--green);border-bottom-color:var(--green)}
 :root[data-college-ready] .mast-title{font-size:clamp(32px,4.8vw,64px);overflow-wrap:anywhere}
 :root[data-college-ready] .mast-row{flex-wrap:wrap}
 :root[data-college-ready] .mast-title-group{flex:0 1 auto;min-width:0;max-width:100%}
-.seal[data-letters="3"]{font-size:12px;letter-spacing:1px}.seal[data-letters="4"]{font-size:10px;letter-spacing:0}
+.pinned-favorites{margin-bottom:38px;scroll-margin-top:70px}
+.pinned-favorites[hidden]{display:none}
+.favorite-site{position:relative;min-width:0;border:1px solid var(--line-soft);border-radius:var(--personal-radius);background:rgba(var(--personal-card-rgb),var(--personal-card-alpha));backdrop-filter:blur(var(--personal-blur)) saturate(140%);-webkit-backdrop-filter:blur(var(--personal-blur)) saturate(140%)}
+.favorite-site:hover{border-color:var(--green);background:rgba(var(--personal-card-rgb),min(1,calc(var(--personal-card-alpha) + .12)))}
+.favorite-site>a{display:flex;flex-direction:column;gap:2px;min-height:114px;padding:16px;text-decoration:none;color:inherit}
+.favorite-site .link-title{padding-right:18px}
+.favorite-site .favorite-btn{opacity:1}
+:root[data-card-density="compact"] .favorite-site>a{min-height:90px;padding:12px;gap:4px}
+:root[data-card-density="spacious"] .favorite-site>a{min-height:142px;padding:22px;gap:10px}
+.pinned-favorites .list-mode .favorite-site>a{min-height:0;flex-direction:row;align-items:center;gap:16px}
+.pinned-favorites .list-mode .tile-head{flex:0 0 150px;margin:0}
+.pinned-favorites .list-mode .link-title{flex:1}
+.pinned-favorites .list-mode .link-desc{flex:1}
+@media(max-width:540px){.pinned-favorites .list-mode .tile-head{display:none}.pinned-favorites .list-mode .link-desc{display:none}}
 .personal-dialog{margin:auto;width:min(760px,calc(100vw - 28px));max-height:calc(100dvh - 32px);overflow:auto;padding:26px;border:1px solid var(--line-soft);border-radius:15px;background:var(--paper-hi);color:var(--ink);box-shadow:0 20px 80px #0004}
 .personal-settings-dialog{width:min(920px,calc(100vw - 28px));overflow:hidden;padding:0}
 .personal-dialog::backdrop{background:#0006;backdrop-filter:blur(5px)}
